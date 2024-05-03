@@ -2419,3 +2419,20 @@ def test_date_range_tz():
     result = pd.date_range("2020-01-01", "2020-01-02", periods=2, tz="UTC")
     expected = cudf.date_range("2020-01-01", "2020-01-02", periods=2, tz="UTC")
     assert_eq(result, expected)
+
+
+def test_date_range_indexer_between_time():
+    start, end, freq, start_time, end_time = (
+        "2023-01-01",
+        "2023-01-02",
+        "1h",
+        "09:00",
+        "16:00",
+    )
+    expected = pd.date_range(start, end, freq=freq).indexer_between_time(
+        start_time, end_time
+    )
+    result = cudf.date_range(start, end, freq=freq).indexer_between_time(
+        start_time, end_time
+    )
+    assert_eq(expected, result)
